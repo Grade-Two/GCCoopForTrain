@@ -32,7 +32,7 @@ def train(logits, labels):
 
 def test(logits, labels):
     with tf.device(FLAGS.device):
-        correct_prediction = tf.equal(tf.argmax(labels, 1), tf.argmax(tf.reshape(logits, (32, 10)), 1))
+        correct_prediction = tf.equal(tf.argmax(labels, 1), tf.argmax(tf.reshape(logits, (batch_size, 10)), 1))
         count = tf.reduce_sum(tf.cast(correct_prediction, tf.float32))
     return count
 
@@ -56,7 +56,7 @@ def main():
         loss_op = tf.reduce_mean(cross_entropy, name='cross_entropy')
         train_op = tf.train.AdamOptimizer(0.01).minimize(loss_op)
         # 测试
-        correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(tf.reshape(net, (32, 10)), 1))
+        correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(tf.reshape(net, (batch_size, 10)), 1))
         test_op = tf.reduce_sum(tf.cast(correct_prediction, tf.float32))
         with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
             init = tf.global_variables_initializer()
