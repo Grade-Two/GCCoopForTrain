@@ -3,7 +3,7 @@ import time
 import numpy as np
 
 import Cifar10Reader
-import ResNet_Model
+import ResNetModel
 
 tf.flags.DEFINE_integer('num_clones', 1, '')
 tf.flags.DEFINE_bool('clone_on_cpu', False, '')
