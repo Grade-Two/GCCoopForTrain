@@ -53,7 +53,7 @@ def main():
             x = tf.placeholder(tf.float32, [None, 32, 32, 3])
             y = tf.placeholder(tf.int32, [None, 10])
             # 训练
-            logits, _ = ResNet_Model.resnet_v2_50(x, 10)
+            logits, _ = ResNetModel.resnet_v2_50(x, 10)
             train_op, loss_op = train(logits, y)
             # 测试
             test_op = test(logits, y)
