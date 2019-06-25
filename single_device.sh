@@ -8,4 +8,4 @@ tar -zxvf cifar-10-python.tar.gz
 fi
 
 # run experiment
-python main.py --device="/cpu:0" --batch_size=64 --dataset_dir="cifar-10-python/cifar-10-batches-py/" > single_node.txt
+python main.py --device="/cpu:0" --batch_size=64 --dataset_dir="cifar-10-batches-py/" > single_node.txt
