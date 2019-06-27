@@ -60,7 +60,7 @@ FLAGS = flags.FLAGS
 IMAGE_PIXELS = 28
 
 
-def main():
+def main(unused_arg):
   mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
   if FLAGS.download_only:
     sys.exit(0)
