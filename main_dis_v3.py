@@ -40,7 +40,7 @@ def main(_):
         with tf.device(tf.train.replica_device_setter(worker_device="/job:worker/task:%d" % (FLAGS.task_index),
                                                       cluster=cluster)):
             # load mnist dataset
-            mnist = input_data.read_data_sets("/tmp/mnist/", one_hot=True)
+            mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
             # the model
             images = tf.placeholder(tf.float32, [None, 784])
             labels = tf.placeholder(tf.int32, [None, 10])
