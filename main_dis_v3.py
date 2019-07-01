@@ -1,6 +1,7 @@
 import tensorflow as tf
 # from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 import tensorflow.examples.tutorials.mnist.input_data as input_data
+import time
 
 tf.flags.DEFINE_string("ps_hosts", "c240g5-110201.wisc.cloudlab.us:2223", "ps hosts")
 tf.flags.DEFINE_string("worker_hosts", "c240g5-110109.wisc.cloudlab.us:2224,c240g5-110207.wisc.cloudlab.us:2224", "worker hosts")
@@ -8,7 +9,7 @@ tf.flags.DEFINE_string("job_name", "worker", "'ps' or'worker'")
 tf.flags.DEFINE_integer("task_index", 0, "Index of task within the job")
 tf.flags.DEFINE_integer("num_workers", 1, "Number of workers")
 tf.flags.DEFINE_boolean("is_sync", True, "using synchronous training or not")
-tf.flags.DEFINE_boolean("data_dir", "data", "")
+tf.flags.DEFINE_string("data_dir", "data", "")
 FLAGS = tf.flags.FLAGS
 
 
@@ -31,13 +32,14 @@ def main(_):
     if FLAGS.job_name == "ps":
         server.join()  # ps hosts only join
     elif FLAGS.job_name == "worker":
+        time.sleep(10)
         # workers perform the operation
         # ps_strategy = tf.contrib.training.GreedyLoadBalancingStrategy(FLAGS.num_ps)
 
         # Note: tf.train.replica_device_setter automatically place the paramters (Variables)
         # on the ps hosts (default placement strategy:  round-robin over all ps hosts, and also
         # place multi copies of operations to each worker host
-        with tf.device(tf.train.replica_device_setter(worker_device="/job:worker/task:%d" % (FLAGS.task_index),
+        with tf.device(tf.train.replica_device_setter(ps_device="/job:ps/cpu:0", worker_device="/job:worker/task:%d" % (FLAGS.task_index),
                                                       cluster=cluster)):
             # load mnist dataset
             mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
