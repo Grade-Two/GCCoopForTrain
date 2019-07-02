@@ -32,7 +32,6 @@ class Reader:
                 one_hot = [0] * self.num_classes
                 one_hot[label] = 1
                 buffer_labels.append(one_hot)
-            buffer_labels.extend(one_hot)
             images = np.reshape(data[b'data'], (-1, 3, 32, 32))
             images = images.transpose((0, 2, 3, 1))
             buffer_images.extend(images.tolist())
