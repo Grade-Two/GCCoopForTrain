@@ -1,7 +1,7 @@
 import tensorflow as tf
 # from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 import tensorflow.examples.tutorials.mnist.input_data as input_data
-import ResNet_Model
+import ResNetModel
 import Cifar10Reader
 import time
 
@@ -48,7 +48,7 @@ def main(_):
             # the model
             images = tf.placeholder(tf.float32, [None, 32, 32, 3])
             labels = tf.placeholder(tf.int32, [None, 10])
-            logits, _ = ResNet_Model.resnet_v2_50(images, 10)
+            logits, _ = ResNetModel.resnet_v2_50(images, 10)
             loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
             # The StopAtStepHook handles stopping after running given steps.
             hooks = [tf.train.StopAtStepHook(last_step=2000000)]
