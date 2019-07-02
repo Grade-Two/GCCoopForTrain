@@ -8,7 +8,7 @@ tf.flags.DEFINE_string("job_name", "worker", "'ps' or'worker'")
 tf.flags.DEFINE_integer("task_index", 0, "Index of task within the job")
 tf.flags.DEFINE_integer("num_workers", 1, "Number of workers")
 tf.flags.DEFINE_boolean("is_sync", True, "using synchronous training or not")
-tf.flags.DEFINE_boolean("data_dir", "data", "")
+tf.flags.DEFINE_string("data_dir", "data", "")
 FLAGS = tf.flags.FLAGS
 
 
