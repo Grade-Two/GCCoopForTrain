@@ -1,7 +1,7 @@
 import tensorflow as tf
 # from tensorflow.contrib.learn.python.learn.datasets.mnist import read_data_sets
 import tensorflow.examples.tutorials.mnist.input_data as input_data
-import ResNetModel
+import ResNet_Model
 import Cifar10Reader
 import time
 
@@ -11,7 +11,7 @@ tf.flags.DEFINE_string("job_name", "worker", "'ps' or'worker'")
 tf.flags.DEFINE_integer("task_index", 0, "Index of task within the job")
 tf.flags.DEFINE_integer("num_workers", 1, "Number of workers")
 tf.flags.DEFINE_boolean("is_sync", True, "using synchronous training or not")
-tf.flags.DEFINE_boolean("data_dir", "data", "")
+tf.flags.DEFINE_string("data_dir", "cifar-10-batches-py", "")
 tf.flags.DEFINE_integer("batch_size", 32, "")
 FLAGS = tf.flags.FLAGS
 
@@ -43,12 +43,10 @@ def main(_):
         # place multi copies of operations to each worker host
         with tf.device(tf.train.replica_device_setter(worker_device="/job:worker/task:%d" % FLAGS.task_index,
                                                       cluster=cluster)):
-            # load mnist dataset
-            mnist = input_data.read_data_sets("mnist", one_hot=True)
             # the model
             images = tf.placeholder(tf.float32, [None, 32, 32, 3])
             labels = tf.placeholder(tf.int32, [None, 10])
-            logits, _ = ResNetModel.resnet_v2_50(images, 10)
+            logits, _ = ResNet_Model.resnet_v2_50(images, 10)
             loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
             # The StopAtStepHook handles stopping after running given steps.
             hooks = [tf.train.StopAtStepHook(last_step=2000000)]
@@ -72,13 +70,13 @@ def main(_):
             # The MonitoredTrainingSession takes care of session initialization,
             # restoring from a checkpoint, saving to a checkpoint, and closing when done
             # or an error occurs.
-            train_reader = Cifar10Reader.Reader(['cifar-10-python\\cifar-10-batches-py\\data_batch_1',
-                                                 'cifar-10-python\\cifar-10-batches-py\\data_batch_2',
-                                                 'cifar-10-python\\cifar-10-batches-py\\data_batch_3',
-                                                 'cifar-10-python\\cifar-10-batches-py\\data_batch_4',
-                                                 'cifar-10-python\\cifar-10-batches-py\\data_batch_5'])
+            train_reader = Cifar10Reader.Reader([FLAGS.data_dir + '/data_batch_1',
+                                                 FLAGS.data_dir + '/data_batch_2',
+                                                 FLAGS.data_dir + '/data_batch_3',
+                                                 FLAGS.data_dir + '/data_batch_4',
+                                                 FLAGS.data_dir + '/data_batch_5'])
             if FLAGS.task_index == 0:
-                test_reader = test_reader = Cifar10Reader.Reader(['cifar-10-python\\cifar-10-batches-py\\test_batch'])
+                test_reader = test_reader = Cifar10Reader.Reader([FLAGS.data_dir + '/test_batch'])
             with tf.train.MonitoredTrainingSession(master=server.target,
                                                    is_chief=(FLAGS.task_index == 0),
                                                    hooks=hooks) as mon_sess:
