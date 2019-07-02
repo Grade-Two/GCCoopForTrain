@@ -27,9 +27,11 @@ class Reader:
         for filename in self.filenames:
             f = open(filename, 'rb')
             data = pickle.load(f, encoding='bytes')
-            label = data[b'labels']
-            one_hot = [0] * self.num_classes
-            one_hot[label] = 1
+            labels = data[b'labels']
+            for label in labels:
+                one_hot = [0] * self.num_classes
+                one_hot[label] = 1
+                buffer_labels.append(one_hot)
             buffer_labels.extend(one_hot)
             images = np.reshape(data[b'data'], (-1, 3, 32, 32))
             images = images.transpose((0, 2, 3, 1))
