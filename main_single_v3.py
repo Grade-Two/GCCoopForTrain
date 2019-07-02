@@ -60,8 +60,7 @@ def main(unused_args):
     eval_data = mnist.test.images
     eval_labels = np.asarray(mnist.test.labels, dtype=np.int32)
     sess_config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
-    config = tf.contrib.estimator.RunConfig(session_config=sess_config, train_distribute=None,
-                                            model_dir="mnist_convnet_model")
+    config = tf.contrib.learn.RunConfig(session_config=sess_config, model_dir="mnist_convnet_model")
     mnist_classifier = tf.contrib.estimator.Estimator(model_fn=cnn_model_fn, model_dir="mnist_convnet_model",
                                                       config=config)
     tensors_to_log = {"probabilities": "softmax_tensor"}
